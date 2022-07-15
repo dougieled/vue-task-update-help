@@ -1,0 +1,25 @@
+.hd-Header_Nav {
+  display: flex;
+  background: var(--Color_Black);
+  padding: 5px 20px;
+  justify-content: flex-end;
+  color: #97999b;
+  align-items: center;
+}
+
+.hd-Header_Icon {
+  width: 20px;
+  margin: 10px;
+}
+
+.hd-Header_Count {
+  margin-right: 20px;
+  position: absolute;
+  top: 11px;
+  right: -5px;
+  padding: 1px 5px;
+  border-radius: 50%;
+  border: 2px solid #000;
+  background-color: var(--Color_Grey-2);
+  font-size: 10px;
+}

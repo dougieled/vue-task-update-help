@@ -1,0 +1,108 @@
+html, body, #app {
+  margin: 0;
+  background-color: var(--Color_Grey);
+  color: var(--Color_Grey-2);
+  font-family: var(--Font_Family-gtAmericaMono);
+  font-weight: 300;
+  letter-spacing: 0.05em;
+  font-size: 16px;
+  line-height: 15px;
+}
+
+h2 {
+  font-weight: 300;
+  text-transform: uppercase;
+}
+
+.btn-Button {
+  position: relative;
+  z-index: 1;
+
+  font-family: var(--Font_Family-gtAmericaMono);
+
+  align-items: center;
+  justify-content: center;
+
+  display: flex;
+  padding: 12px 15px;
+
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.2em;
+  line-height: 16px;
+  text-align: center;
+  text-transform: uppercase;
+
+  background-color: transparent;
+  border: 0;
+  border-radius: 0;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.btn-Button-primary {
+  --notchSize: 5px;
+  background-color: var(--Color_OffWhite);
+  color: var(--Color_WarmBlack);
+  text-align: left;
+  width: fit-content;
+
+  clip-path:
+    polygon(
+      0% var(--notchSize),
+      var(--notchSize) 0%,
+      calc(100% - var(--notchSize)) 0%,
+      100% var(--notchSize),
+      100% calc(100% - var(--notchSize)),
+      calc(100% - var(--notchSize)) 100%,
+      var(--notchSize) 100%,
+      0% calc(100% - var(--notchSize))
+    );
+
+  transition: color 0.5s ease;
+}
+.btn-Button-primary:not([disabled]):hover {
+  color: var(--Color_Grey-2);
+
+  animation: PrimaryButtonFlicker 0.2s normal forwards linear;
+}
+
+@keyframes PrimaryButtonFlicker {
+  0% {
+    background-color: var(--Color_OffWhite);
+  }
+
+  10% {
+    background-color: var(--Color_OffWhite);
+  }
+
+  20% {
+    background-color: var(--Color_OffWhite);
+  }
+
+  50% {
+    background-color: var(--Color_WarmBlack);
+  }
+
+  60% {
+    background-color: var(--Color_OffWhite);
+  }
+
+  100% {
+    background-color: var(--Color_WarmBlack);
+  }
+}
+
+.btn-Button_Icon {
+  display: block;
+
+  width: 15px;
+  height: 15px;
+
+  margin-left: 15px;
+  padding-right: 15px;
+  padding-left: 15px;
+
+  border-left: 1px dotted var(--Color_MilitaryGreen);
+  color:var(--Color_MilitaryGreen);
+}
