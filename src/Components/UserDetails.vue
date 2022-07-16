@@ -1,49 +1,50 @@
-<script setup lang="ts">
-import { onMounted, ref, watch } from "vue";
+<script lang="ts">
+import { onMounted, ref, watch, defineComponent } from "vue";
 import type { repo } from "@/Composables/local-storage";
 
 import HeartEmptyIcon from "@/assets/icon-heart-empty.svg";
 import HeartFilledIcon from "@/assets/icon-heart-filled.svg";
 import ButtonIcon from "@/assets/icon-dots.svg";
-
-//Use new Pinia Storage
 import { useGitStore } from '@/stores/gitStore'
-const gitStore = useGitStore()
+export default defineComponent({
+  props: {
+    selectedUser: Object
+  },
+  setup(props) {
+    const gitStore = useGitStore()
+    const repos = ref<repo[]>([]);
 
-//NOTE: Commented out old local-storage code
-// import { useLocalStorage } from "@/Composables/local-storage";
-// const { repo } = useLocalStorage();
-//const { useRemoveLike, useSaveLike, repoLikeMap } = useLocalStorage();
-const props = defineProps(["selectedUser"]);
-const repos = ref<repo[]>([]);
+    const isRepoLiked = (repo: repo) => {
+      return gitStore.likedRepos.find(x => x.full_name === repo.full_name) !== undefined;
+    };
+    const fetchUserRepos = async (repoLink: string) => {
+      const response = await fetch(repoLink);
+      if (response.ok) {
+        const data = await response.json();
+        repos.value = data;
+      }
+    };
 
-//Note
-//Made new method which will be used to as a boolean below to handle
-//the filled in or not heart icon and which method to run based on this
-const isRepoLiked = (repo: repo) => {
-  return gitStore.likedRepos.find(x => x.full_name === repo.full_name) !== undefined;
-};
-
-watch(
-  () => props.selectedUser,
-  (newValue) => {
-    fetchUserRepos(newValue.reposUrl);
+    watch(props.selectedUser,
+      (newValue) => {
+        fetchUserRepos(newValue.reposUrl);
+      }
+    );
+    onMounted(() => {
+      if (props.selectedUser) {
+        fetchUserRepos(props.selectedUser.reposUrl);
+      }
+    });
+    return {
+      gitStore,
+      repos,
+      isRepoLiked,
+      HeartEmptyIcon,
+      HeartFilledIcon,
+      ButtonIcon
+    }
   }
-);
-
-const fetchUserRepos = async (repoLink: string) => {
-  const response = await fetch(repoLink);
-  if (response.ok) {
-    const data = await response.json();
-    repos.value = data;
-  }
-};
-
-onMounted(() => {
-  if (props.selectedUser) {
-    fetchUserRepos(props.selectedUser.reposUrl);
-  }
-});
+})
 </script>
 
 <template>

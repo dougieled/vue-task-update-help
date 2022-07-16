@@ -1,13 +1,18 @@
-<script setup lang="ts">
+<script lang="ts">
+import { defineComponent } from "vue";
 import HeartFilledIcon from "@/assets/icon-heart-filled.svg";
-
 //Use new Pinia Storage
 import { useGitStore } from '@/stores/gitStore'
-const gitStore = useGitStore()
 
-//NOTE: Commented out old local-storage code
-// import { useLocalStorage } from "@/Composables/local-storage";
-// const { useRemoveLike,repoLikeMap } = useLocalStorage();
+export default defineComponent({
+  setup() {
+    const gitStore = useGitStore()
+    return {
+      gitStore,
+      HeartFilledIcon
+    }
+  }
+})
 </script>
 <template>
   <div class="acc-Account">

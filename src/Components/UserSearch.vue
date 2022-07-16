@@ -1,57 +1,73 @@
-<script setup lang="ts">
+<script lang="ts">
 import { ref } from "vue";
 import SearchBox from "./SearchBox.vue";
 import UserDetails from "./UserDetails.vue";
 
-type TUser = { username: string; reposUrl: string; avatarUrl: string };
-const users = ref<TUser[]>([]);
-const searchInput = ref<string>("");
-const selectedUser = ref<TUser | null>(null);
-const isLoading = ref<boolean>(false);
+export default {
+  components: {
+    SearchBox,
+    UserDetails
+  },
 
-const searchByUsername = async (username: string) => {
-  if (!username) {
-    users.value = [];
-    return;
+  setup() {
+    type TUser = { username: string; reposUrl: string; avatarUrl: string };
+    const users = ref<TUser[]>([]);
+    const searchInput = ref<string>("");
+    const selectedUser = ref<TUser | null>(null);
+    const isLoading = ref<boolean>(false);
+
+    const searchByUsername = async (username: string) => {
+      if (!username) {
+        users.value = [];
+        return;
+      }
+      isLoading.value = true;
+      const response = await fetch(
+        `https://api.github.com/search/users?q=${username}in:login`
+      );
+
+      if (response.ok) {
+        const data: {
+          items: { login: string; repos_url: string; avatar_url: string; profile_url: string }[];
+        } = await response.json();
+        users.value = data.items.map((item) => ({
+          username: item.login,
+          reposUrl: item.repos_url,
+          avatarUrl: item.avatar_url,
+          profileUrl: item.html_url,
+        }));
+        isLoading.value = false;
+      }
+    };
+
+    const handleSelectUsername = (username: string) => {
+      const user = users.value.find((user) => user.username === username);
+      if (user) {
+        selectedUser.value = user;
+        users.value = [];
+      } else {
+        selectedUser.value = null;
+      }
+    };
+
+    const handleSearchChange = (searchQuery: string) => {
+      if (!searchQuery) {
+        users.value = [];
+        selectedUser.value = null;
+      }
+      searchInput.value = searchQuery;
+      searchByUsername(searchQuery);
+    };
+    return {
+      users,
+      searchInput,
+      selectedUser,
+      isLoading,
+      handleSelectUsername,
+      handleSearchChange
+    }
   }
-
-  isLoading.value = true;
-  const response = await fetch(
-    `https://api.github.com/search/users?q=${username}in:login`
-  );
-
-  if (response.ok) {
-    const data: {
-      items: { login: string; repos_url: string; avatar_url: string; profile_url: string }[];
-    } = await response.json();
-    users.value = data.items.map((item) => ({
-      username: item.login,
-      reposUrl: item.repos_url,
-      avatarUrl: item.avatar_url,
-      profileUrl: item.html_url,
-    }));
-    isLoading.value = false;
-  }
-};
-
-const handleSelectUsername = (username: string) => {
-  const user = users.value.find((user) => user.username === username);
-  if (user) {
-    selectedUser.value = user;
-    users.value = [];
-  } else {
-    selectedUser.value = null;
-  }
-};
-
-const handleSearchChange = (searchQuery: string) => {
-  if (!searchQuery) {
-    users.value = [];
-    selectedUser.value = null;
-  }
-  searchInput.value = searchQuery;
-  searchByUsername(searchQuery);
-};
+}
 </script>
 <template>
   <div class="acc-Account">
