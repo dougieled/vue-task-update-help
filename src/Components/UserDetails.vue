@@ -25,11 +25,9 @@ export default defineComponent({
       }
     };
 
-    watch(props.selectedUser,
-      (newValue) => {
-        fetchUserRepos(newValue.reposUrl);
-      }
-    );
+    watch(() => props.selectedUser, (newValue, second) => {
+      fetchUserRepos(newValue?.reposUrl);
+    });
     onMounted(() => {
       if (props.selectedUser) {
         fetchUserRepos(props.selectedUser.reposUrl);
@@ -50,14 +48,14 @@ export default defineComponent({
 <template>
   <div class="acc-Account_Item acc-User">
     <div class="acc-User_Picture">
-      <img class="acc-User_Picture" width="200" :src="selectedUser.avatarUrl" />
+      <img class="acc-User_Picture" width="200" :src="selectedUser?.avatarUrl" />
     </div>
     <div class="acc-User_Content">
       <div class="acc-User_Name">
-        <h2>{{ selectedUser.username }}</h2>
+        <h2>{{ selectedUser?.username }}</h2>
       </div>
       <div class="acc-User_Link">
-        <a :href="selectedUser.profileUrl" class="btn-Button btn-Button-primary" target="_blank" alt="View profile">
+        <a :href="selectedUser?.profileUrl" class="btn-Button btn-Button-primary" target="_blank" alt="View profile">
           <span>View profile</span>
           <span class="btn-Button_Icon">
             <img :src="ButtonIcon" />

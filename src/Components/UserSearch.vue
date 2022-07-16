@@ -28,7 +28,7 @@ export default {
 
       if (response.ok) {
         const data: {
-          items: { login: string; repos_url: string; avatar_url: string; profile_url: string }[];
+          items: { login: string; repos_url: string; avatar_url: string; profile_url: string, html_url: string }[];
         } = await response.json();
         users.value = data.items.map((item) => ({
           username: item.login,
