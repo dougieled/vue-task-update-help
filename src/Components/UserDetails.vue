@@ -1,4 +1,4 @@
-<script lang="ts">
+<script setup lang="ts">
 import { onMounted, ref, watch, defineComponent } from "vue";
 import type { repo } from "@/Composables/local-storage";
 
@@ -6,43 +6,31 @@ import HeartEmptyIcon from "@/assets/icon-heart-empty.svg";
 import HeartFilledIcon from "@/assets/icon-heart-filled.svg";
 import ButtonIcon from "@/assets/icon-dots.svg";
 import { useGitStore } from '@/stores/gitStore'
-export default defineComponent({
-  props: {
-    selectedUser: Object
-  },
-  setup(props) {
-    const gitStore = useGitStore()
-    const repos = ref<repo[]>([]);
+const props = defineProps(['selectedUser'])
+const gitStore = useGitStore()
+const repos = ref<repo[]>([]);
 
-    const isRepoLiked = (repo: repo) => {
-      return gitStore.likedRepos.find(x => x.full_name === repo.full_name) !== undefined;
-    };
-    const fetchUserRepos = async (repoLink: string) => {
-      const response = await fetch(repoLink);
-      if (response.ok) {
-        const data = await response.json();
-        repos.value = data;
-      }
-    };
-
-    watch(() => props.selectedUser, (newValue, second) => {
-      fetchUserRepos(newValue?.reposUrl);
-    });
-    onMounted(() => {
-      if (props.selectedUser) {
-        fetchUserRepos(props.selectedUser.reposUrl);
-      }
-    });
-    return {
-      gitStore,
-      repos,
-      isRepoLiked,
-      HeartEmptyIcon,
-      HeartFilledIcon,
-      ButtonIcon
-    }
+const isRepoLiked = (repo: repo) => {
+  return gitStore.likedRepos.find(x => x.full_name === repo.full_name) !== undefined;
+};
+const fetchUserRepos = async (repoLink: string) => {
+  const response = await fetch(repoLink);
+  if (response.ok) {
+    const data = await response.json();
+    repos.value = data;
   }
-})
+};
+
+watch(() => props.selectedUser, (newValue, second) => {
+  fetchUserRepos(newValue?.reposUrl);
+});
+onMounted(() => {
+  if (props.selectedUser) {
+    fetchUserRepos(props.selectedUser.reposUrl);
+  }
+});
+
+
 </script>
 
 <template>

@@ -1,18 +1,11 @@
-<script lang="ts">
+<script setup lang="ts">
 import { defineComponent } from "vue";
 import HeartFilledIcon from "@/assets/icon-heart-filled.svg";
 //Use new Pinia Storage
 import { useGitStore } from '@/stores/gitStore'
 
-export default defineComponent({
-  setup() {
-    const gitStore = useGitStore()
-    return {
-      gitStore,
-      HeartFilledIcon
-    }
-  }
-})
+const gitStore = useGitStore()
+
 </script>
 <template>
   <div class="acc-Account">
